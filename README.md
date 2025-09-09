@@ -5,7 +5,7 @@
 ---
 
 
-![Workflow Overview](https://raw.githubusercontent.com/yourusername/yourrepo/main/images/workflow-overview.png)
+![Workflow Overview](https://github.com/shettymahindra-l/Financial_assistant_for_rural_India/blob/1cef3df2bcfc336d78f4b48fe2c428e36c496ff9/Workflow%20screenshot.png)
 ![Telegram Chat Example](https://github.com/shettymahindra-l/Financial_assistant_for_rural_India/blob/e81ac55c13016dcf7af32d9ffaabeaaffe58a2a6/TG%20BOT%20Screenshot.jpeg)
 
 
