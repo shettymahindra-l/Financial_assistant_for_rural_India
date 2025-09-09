@@ -6,7 +6,7 @@
 
 
 ![Workflow Overview](https://raw.githubusercontent.com/yourusername/yourrepo/main/images/workflow-overview.png)
-![Telegram Chat Example](https://raw.githubusercontent.com/yourusername/yourrepo/main/images/telegram-chat.png)
+![Telegram Chat Example](https://github.com/shettymahindra-l/Financial_assistant_for_rural_India/blob/e81ac55c13016dcf7af32d9ffaabeaaffe58a2a6/TG%20BOT%20Screenshot.jpeg)
 
 
 ## 🌟 Features
