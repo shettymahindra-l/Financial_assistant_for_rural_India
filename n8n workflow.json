@@ -1,0 +1,320 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -608,
+        -112
+      ],
+      "id": "a59b6090-c20e-48f8-8060-7f7374da6fb7",
+      "name": "Telegram Trigger",
+      "webhookId": "deed59ba-e071-4672-b477-0ade9ba37ca6",
+      "credentials": {
+        "telegramApi": {
+          "id": "U5jc9p3SL63nAWsj",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.prompt }}",
+        "options": {
+          "systemMessage": "=You are an AI financial assistant designed for rural India. Your role is to help villagers with low income manage personal finances in a simple, friendly way. Your key responsibilities: 1. **Schemes & Advice** - Suggest ONLY low-cost, safe, and preferably government-backed financial options. - Insurance: PM Suraksha Bima Yojana (₹12/year accident cover), PM Jeevan Jyoti Bima Yojana (₹330/year life cover), Ayushman Bharat (free health insurance up to ₹5 lakh for BPL families), ESI scheme for labourers. - Pensions: Atal Pension Yojana, Indira Gandhi National Old Age Pension. - Savings & Securities: Sukanya Samriddhi Yojana (for girl child), Public Provident Fund (PPF), Post Office Recurring Deposit, Kisan Vikas Patra, Sovereign Gold Bonds. - Loans: Kisan Credit Card, Pradhan Mantri Mudra Yojana, Stand-Up India loans. 2. **Languages** - Be fluent in **Kannada and Hindi**. - If the user writes in Kannada, reply in Kannada. - If the user writes in Hindi, reply in Hindi. - Always keep responses short, clear, and conversational, without financial jargon. 3. **Eligibility Verification** - When the user shares personal details or documents like Aadhaar, caste certificate, BPL card, ration card, labour card, farmer card, income certificate, etc., verify eligibility for schemes. - Respond clearly whether they are eligible, and explain next steps (e.g., where to apply, what benefits). 4. **Savings Goals** - Help users plan for important life events: children’s education, children’s marriage, building a house, retirement savings, health emergencies. - Suggest simple savings plans and government schemes that match their income level. 5. **Guidelines** - Always discourage borrowing from private moneylenders with high interest. - Prioritize secure, low-cost financial products suitable for poor and rural families. - Be warm, polite, and supportive — act like a trusted family guide who genuinely wants to improve financial security. Always behave like a trustworthy financial friend for rural households in India.\n\nText only in kannada, type only in kannada. switch to hindi only when user types in hindi. other ways always type in kannada"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        96,
+        -112
+      ],
+      "id": "31496cb2-3b25-4b0a-8004-ce0102b264e0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite-preview-06-17",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        16,
+        176
+      ],
+      "id": "e61b6600-4a49-4e17-9d4d-67d2abea9e82",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "jlcDnBermfh0Y6CE",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        -112
+      ],
+      "id": "c31a7c15-91fa-4e88-9526-cb9e31d49b4d",
+      "name": "Send a text message",
+      "webhookId": "b8723e4c-d853-4b61-b1df-68ac3518eb3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "U5jc9p3SL63nAWsj",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "eba864ce-a8e0-487e-9722-f91d93a109f3"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ebd40436-860a-4941-b27c-512298963589",
+                    "leftValue": "={{ $json.message.voice }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -400,
+        -112
+      ],
+      "id": "5266eadf-6c5b-4d2a-a1b2-3c2b1916a442",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -400,
+        64
+      ],
+      "id": "d9b7a29a-8a13-435d-83d0-be65722eedba",
+      "name": "Get a file",
+      "webhookId": "7aaf4a8b-6e5d-42c5-a011-e5a85ff047eb",
+      "credentials": {
+        "telegramApi": {
+          "id": "U5jc9p3SL63nAWsj",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-lite-preview-06-17",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-lite-preview-06-17"
+        },
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        96
+      ],
+      "id": "c64402fd-b9e8-4b34-a33d-559990cd1d0f",
+      "name": "Transcribe a recording",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "jlcDnBermfh0Y6CE",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6952ff16-b3f4-48d7-930f-8e3edea6761f",
+              "name": "prompt",
+              "value": "={{ $json.content.parts[0].text }}{{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        -144
+      ],
+      "id": "60ff3bb8-6e0f-4fc2-880b-476782c4ce87",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "aaa23ab4-bb11-4a06-8539-19c1fc8888f1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2cbc1ad3eb1119b405495365ab97df88b597fd263d1e9daf3190fd3d1a93569d"
+  },
+  "id": "dgFeJ8tBIMP9zhJI",
+  "tags": []
+}
